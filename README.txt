@@ -2,6 +2,8 @@ The files in this directory are all you need to boot up ZedBoard with Linux,
 Xenomai real-time support, and NASA's Core Flight System. It is assumed that
 you are on a Linux machine.
 
+NOTE: The cfs files aren't where I say they are yet. They'll be there Wed.
+
 1. Copy all files in this directory to your SD card (well, technically you
    don't need to copy this readme, but it's kind of nice to have, isn't it?).
 2. Unmount your SD card, take it out, and put it in the ZedBoard.
