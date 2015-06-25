@@ -2,7 +2,7 @@ The files in this directory are all you need to boot up ZedBoard with Linux,
 Xenomai real-time support, and NASA's Core Flight System. It is assumed that
 you are on a Linux machine.
 
-NOTE: The cfs files aren't where I say they are yet. They'll be there Wed.
+NOTE: The cfs files aren't where I say they are yet. They'll be there soon.
 
 1. Copy all files in this directory to your SD card (well, technically you
    don't need to copy this readme, but it's kind of nice to have, isn't it?).
@@ -23,7 +23,10 @@ NOTE: The cfs files aren't where I say they are yet. They'll be there Wed.
 11. Type "sudo minicom" to connect to the board as it boots.
 12. When the board finishes booting, the username and password are both 
     "root".
-13. The CFS files are in /opt/cfs.
+13. Mount the SD card: "mount /dev/mmcblk0p1 /mnt"
+14. Copy the CFS files: "cp -r /mnt/exe/ /opt"
+15. cd /opt/exe
+16. ./core-linux.bin
 
 If that was painful, don't worry, you can skip steps 3-9 from now on.
 
@@ -67,6 +70,7 @@ PATH=/opt/Xilinx/SDK/2015.1/gnu/arm/lin/bin:/home/{YOUR_USERNAME_HERE}/zedboard/
 make ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- xilinx_zynq_defconfig
 make ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- menuconfig
 (Disable "Remoteproc drivers" under Device Drivers and then "Support for hot-pluggable CPUs" under Kernel Features, exit and save.)
+(While you're at it, you'll want to enable NFS Server Support (for NFSv3) under File Systems -> Network File Systems)
 make ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- UIMAGE_LOADADDR=0x8000 uImage
 (The kernel image is in arch/arm/boot, called uImage. Replace your existing uImage (on your SD card) with this one.)
 
@@ -80,6 +84,7 @@ cd xenbuild
 make DESTDIR=../xentemp install
 (Now you should have two directories: dev containing some device files and usr containing a directory called xenomai.)
 (Copy your uramdisk.image.gz from step 1 to this directory)
+(All the sudos in the upcoming section are there for a reason - it may not work without them)
 sudo mkdir tmprootfs
 dd if=uramdisk.image.gz of=ramdisk.image.gz bs=64 skip=1
 mv uramdisk.image.gz old_uramdisk.image.gz
