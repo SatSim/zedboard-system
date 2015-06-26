@@ -77,20 +77,28 @@ make ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- UIMAGE_LOADADDR=0x8000 uIm
 3. Make Xenomai userspace support
 cd ~/zedboard
 mkdir xentemp
-mkdir xenbuild
-cd xenbuild
-../xenomai-2.6.3/configure CFLAGS="-march=armv7-a" LDFLAGS="-march=armv7-a" --build=i686-pc-linux-gnu --host=arm-xilinx-linux-gnueabi-
-(If that fails, try without the dash between 7 and a.)
-make DESTDIR=../xentemp install
-(Now you should have two directories: dev containing some device files and usr containing a directory called xenomai.)
+cd xentemp
 (Copy your uramdisk.image.gz from step 1 to this directory)
 (All the sudos in the upcoming section are there for a reason - it may not work without them)
 sudo mkdir tmprootfs
 dd if=uramdisk.image.gz of=ramdisk.image.gz bs=64 skip=1
 mv uramdisk.image.gz old_uramdisk.image.gz
-gunzip -c ramdisk.image.gz | sudo sh -c 'cd /tmp/rootfs/ && cpio -i'
-sudo mv dev/* tmprootfs/dev/
-sudo mv usr/* tmprootfs/usr/
+gunzip -c ramdisk.image.gz | sudo sh -c 'cd tmprootfs && cpio -i'
+cd ..
+mkdir xenbuild
+cd xenbuild
+../xenomai-2.6.3/configure CFLAGS="-march=armv7-a" LDFLAGS="-march=armv7-a" --build=i686-pc-linux-gnu --host=arm-xilinx-linux-gnueabi
+(If that fails, try without the dash between 7 and a.)
+make DESTDIR=/home/YOURUSERNAMEHERE/zedboard/xentemp/tmprootfs install
+(You have to use the absolute path, not ~/zedboard/whatever. It also may make you use sudo for the above command.)
+cd ../xentemp/tmprootfs/root
+sudo nano .bash_profile
+(On the line below "export PATH=\" and above "/bin:\" add "/usr/xenomai/bin:\", save and exit)
+(Let's do one more thing while we're here: keep it from taking forever to try to set up the network on boot)
+cd ../etc/network
+sudo nano interfaces
+(Comment out the "auto lo" line, save, exit)
+cd ../../..
 sh -c 'cd tmprootfs/ && sudo find . | sudo cpio -H newc -o' | gzip -9 > ramdisk.image.gz
 mkimage -A arm -T ramdisk -C gzip -d ramdisk.image.gz uramdisk.image.gz
 rm ramdisk.image.gz
