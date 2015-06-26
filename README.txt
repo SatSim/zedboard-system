@@ -2,8 +2,6 @@ The files in this directory are all you need to boot up ZedBoard with Linux,
 Xenomai real-time support, and NASA's Core Flight System. It is assumed that
 you are on a Linux machine.
 
-NOTE: The cfs files aren't where I say they are yet. They'll be there soon.
-
 1. Copy all files in this directory to your SD card (well, technically you
    don't need to copy this readme, but it's kind of nice to have, isn't it?).
 2. Unmount your SD card, take it out, and put it in the ZedBoard.
@@ -21,14 +19,22 @@ NOTE: The cfs files aren't where I say they are yet. They'll be there soon.
 9. Press enter, then "Save setup as dfl", then "Exit from Minicom".
 10. Flip the switch to turn on the board (it's by the power cable).
 11. Type "sudo minicom" to connect to the board as it boots.
-12. When the board finishes booting, the username and password are both 
+12. If you did it fast enough, press any key to prevent it from booting. 
+    If you're too late, restart the board and press any key to stop boot.
+13. At the "uboot-zynq" command line, type "set bootargs 
+    'ip=192.168.33.2::255.255.255.0::eth0=off earlyprintk' " and hit enter.
+    This prevents it from trying to connect to the Internet (for several
+    minutes) during boot.
+14. Type "saveenv" and hit enter.
+15. Now type "run sdboot" and hit enter. 
+16. When the board finishes booting, the username and password are both 
     "root".
-13. Mount the SD card: "mount /dev/mmcblk0p1 /mnt"
-14. Copy the CFS files: "cp -r /mnt/exe/ /opt"
-15. cd /opt/exe
-16. ./core-linux.bin
+17. Mount the SD card: "mount /dev/mmcblk0p1 /mnt"
+18. Copy the CFS files: "cp -r /mnt/exe/ /opt"
+19. cd /opt/exe
+20. ./core-linux.bin
 
-If that was painful, don't worry, you can skip steps 3-9 from now on.
+If that was painful, don't worry, you can skip steps 3-15 from now on.
 
 These are instructions for re-creating the files on this card from scratch. A 
 few of the instructions were done from memory, so contact me (Bryan Anderson) 
