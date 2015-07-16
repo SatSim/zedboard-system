@@ -76,7 +76,7 @@ PATH=/opt/Xilinx/SDK/2015.1/gnu/arm/lin/bin:/home/{YOUR_USERNAME_HERE}/zedboard/
 make ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- xilinx_zynq_defconfig
 make ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- menuconfig
 (Disable "Remoteproc drivers" under Device Drivers and then "Support for hot-pluggable CPUs" under Kernel Features, exit and save.)
-(While you're at it, you'll want to enable NFS Server Support (for NFSv3) under File Systems -> Network File Systems)
+(While you're at it, you may wish to enable NFS Server Support (for NFSv3) under File Systems -> Network File Systems)
 make ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- UIMAGE_LOADADDR=0x8000 uImage
 (The kernel image is in arch/arm/boot, called uImage. Replace your existing uImage (on your SD card) with this one.)
 
